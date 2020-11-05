@@ -1,18 +1,14 @@
 package org.systers.mentorship.view.activities
 
-import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import android.os.Handler
 import androidx.appcompat.app.AppCompatActivity
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.*
 import kotlinx.coroutines.flow.first
-import kotlinx.coroutines.launch
-import kotlinx.coroutines.runBlocking
-import org.systers.mentorship.DataStorePreferences
+import org.systers.mentorship.utils.DataStorePreferencesManager
 import org.systers.mentorship.R
-import org.systers.mentorship.utils.PreferenceManager
+import java.lang.Runnable
 
 /**
  * This activity will show the organisation logo for sometime and then start the next activity
@@ -22,24 +18,25 @@ class SplashScreenActivity : AppCompatActivity() {
     private lateinit var handler: Handler
     private lateinit var runnable: Runnable
     private var SPLASH_DISPLAY_LENGTH: Long = 1000
-    private val preferenceManager: PreferenceManager = PreferenceManager()
+    private val dataStorePreferencesManager = DataStorePreferencesManager()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_splash_screen)
 
-//        val preferences =
-//            getSharedPreferences(getString(R.string.intro_prefs), Context.MODE_PRIVATE)
-//        val firstRun = preferences.getBoolean(getString(R.string.intro_prefs_first_run), true)
         var firstRun : Boolean
         runBlocking {
-            firstRun = DataStorePreferences(applicationContext).firstRunFlow.first()
+            firstRun = DataStorePreferencesManager().firstRunFlow.first()
         }
 
         if (firstRun) {
             startActivity(Intent(this, IntroActivity::class.java))
         } else {
-            val intent = if (preferenceManager.authToken.isEmpty()) {
+            var authToken : String
+            runBlocking {
+                authToken = dataStorePreferencesManager.authTokenFlow.first()
+            }
+            val intent = if (authToken.isEmpty()) {
                 Intent(this, LoginActivity::class.java)
             } else {
                 Intent(this, MainActivity::class.java)

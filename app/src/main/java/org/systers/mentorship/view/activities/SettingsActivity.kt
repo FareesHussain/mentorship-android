@@ -4,14 +4,17 @@ import android.content.Intent
 import android.os.Bundle
 import androidx.appcompat.app.AlertDialog
 import kotlinx.android.synthetic.main.activity_settings.*
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.launch
 import org.systers.mentorship.R
-import org.systers.mentorship.utils.PreferenceManager
+import org.systers.mentorship.utils.DataStorePreferencesManager
 import org.systers.mentorship.view.fragments.ChangePasswordFragment
 
 
 class SettingsActivity : BaseActivity() {
 
-    private val preferenceManager: PreferenceManager = PreferenceManager()
+    private val dataStorePreferencesManager = DataStorePreferencesManager()
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -29,7 +32,7 @@ class SettingsActivity : BaseActivity() {
             builder.setTitle(R.string.confirm_logout)
             builder.setMessage(R.string.confirm_logout_msg)
             builder.setPositiveButton(R.string.logout) { _, _ ->
-                preferenceManager.clear()
+                GlobalScope.launch { dataStorePreferencesManager.clear() }
                 startActivity(Intent(this, LoginActivity::class.java))
                 finishAffinity()
             }

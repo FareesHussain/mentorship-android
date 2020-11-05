@@ -2,14 +2,12 @@ package org.systers.mentorship.view.activities
 
 import android.content.Intent
 import android.os.Bundle
-import android.os.PersistableBundle
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import android.view.Menu
 import android.view.MenuItem
 import android.widget.Toast
 import kotlinx.android.synthetic.main.activity_main.*
 import org.systers.mentorship.R
-import org.systers.mentorship.utils.PreferenceManager
 import org.systers.mentorship.view.fragments.*
 
 /**
@@ -23,7 +21,6 @@ class MainActivity : BaseActivity() {
     private var mLastPress: Long = 0
     private lateinit var exitToast: Toast
 
-    private val preferenceManager: PreferenceManager = PreferenceManager()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)

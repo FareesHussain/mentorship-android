@@ -1,6 +1,5 @@
 package org.systers.mentorship.view.activities
 
-import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import android.view.View
@@ -11,7 +10,7 @@ import com.github.paolorotolo.appintro.model.SliderPage
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
-import org.systers.mentorship.DataStorePreferences
+import org.systers.mentorship.utils.DataStorePreferencesManager
 import org.systers.mentorship.R
 import org.systers.mentorship.dsl.getColorAttr
 
@@ -63,12 +62,7 @@ class IntroActivity : AppIntro2() {
         startActivity(Intent(this, LoginActivity::class.java))
         finish()
         CoroutineScope(Dispatchers.IO).launch {
-            DataStorePreferences(applicationContext).stopIntro()
+            DataStorePreferencesManager().stopIntro()
         }
-//        val preferences =
-//            getSharedPreferences(getString(R.string.intro_prefs), Context.MODE_PRIVATE)
-//        val editor = preferences.edit()
-//        editor.putBoolean(getString(R.string.intro_prefs_first_run), false)
-//        editor.apply()
     }
 }

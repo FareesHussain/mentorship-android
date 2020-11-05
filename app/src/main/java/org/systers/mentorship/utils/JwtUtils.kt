@@ -2,6 +2,8 @@ package org.systers.mentorship.utils
 
 import android.util.Base64
 import android.util.Log
+import kotlinx.coroutines.flow.first
+import kotlinx.coroutines.runBlocking
 import org.systers.mentorship.remote.responses.JwtPayload
 
 /**
@@ -35,6 +37,6 @@ fun convertJwtPayloadToObject(str: String) : JwtPayload {
  * @return [JwtPayload] holding the current's user token decoded
  */
 fun getAuthTokenPayload() : JwtPayload {
-    val decodedJwtBody = decodeJwtPayload(PreferenceManager().authToken)
+    val decodedJwtBody = runBlocking { decodeJwtPayload(DataStorePreferencesManager().authTokenFlow.first()) }
     return convertJwtPayloadToObject(decodedJwtBody)
 }
