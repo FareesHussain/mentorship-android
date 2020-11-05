@@ -5,6 +5,12 @@ import android.content.Intent
 import android.os.Bundle
 import android.os.Handler
 import androidx.appcompat.app.AppCompatActivity
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.flow.first
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.runBlocking
+import org.systers.mentorship.DataStorePreferences
 import org.systers.mentorship.R
 import org.systers.mentorship.utils.PreferenceManager
 
@@ -22,9 +28,13 @@ class SplashScreenActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_splash_screen)
 
-        val preferences =
-            getSharedPreferences(getString(R.string.intro_prefs), Context.MODE_PRIVATE)
-        val firstRun = preferences.getBoolean(getString(R.string.intro_prefs_first_run), true)
+//        val preferences =
+//            getSharedPreferences(getString(R.string.intro_prefs), Context.MODE_PRIVATE)
+//        val firstRun = preferences.getBoolean(getString(R.string.intro_prefs_first_run), true)
+        var firstRun : Boolean
+        runBlocking {
+            firstRun = DataStorePreferences(applicationContext).firstRunFlow.first()
+        }
 
         if (firstRun) {
             startActivity(Intent(this, IntroActivity::class.java))
@@ -37,6 +47,7 @@ class SplashScreenActivity : AppCompatActivity() {
             startActivity(intent)
             finish()
         }
+
 
 
         runnable = Runnable {

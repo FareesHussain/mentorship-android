@@ -8,6 +8,10 @@ import androidx.fragment.app.Fragment
 import com.github.paolorotolo.appintro.AppIntro2
 import com.github.paolorotolo.appintro.AppIntro2Fragment
 import com.github.paolorotolo.appintro.model.SliderPage
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
+import org.systers.mentorship.DataStorePreferences
 import org.systers.mentorship.R
 import org.systers.mentorship.dsl.getColorAttr
 
@@ -58,10 +62,13 @@ class IntroActivity : AppIntro2() {
     override fun onDonePressed(currentFragment: Fragment?) {
         startActivity(Intent(this, LoginActivity::class.java))
         finish()
-        val preferences =
-            getSharedPreferences(getString(R.string.intro_prefs), Context.MODE_PRIVATE)
-        val editor = preferences.edit()
-        editor.putBoolean(getString(R.string.intro_prefs_first_run), false)
-        editor.apply()
+        CoroutineScope(Dispatchers.IO).launch {
+            DataStorePreferences(applicationContext).stopIntro()
+        }
+//        val preferences =
+//            getSharedPreferences(getString(R.string.intro_prefs), Context.MODE_PRIVATE)
+//        val editor = preferences.edit()
+//        editor.putBoolean(getString(R.string.intro_prefs_first_run), false)
+//        editor.apply()
     }
 }
